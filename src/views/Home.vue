@@ -294,7 +294,7 @@ watch(isMenuOpen, (val) => {
   </div>
 
   <footer
-    class="fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-xl border-t border-white/5 px-4 py-4"
+    class="static bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-xl border-t border-white/5 px-4 py-4"
   >
     <div class="max-w-2xl mx-auto flex items-center justify-between gap-2">
       <div class="flex flex-col min-w-[70px]">
