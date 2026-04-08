@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maison Éclat — Menu</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F9F4EE;
+    --warm-white: #FDFAF6;
+    --gold: #B8966B;
+    --gold-light: #D4B896;
+    --gold-pale: #F0E4D0;
+    --charcoal: #2A2520;
+    --muted: #7A6E65;
+    --divider: rgba(184,150,107,0.25);
+    --card-bg: #FFFFFF;
+    --nav-h: 64px;
+    --hero-h: 340px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    min-height: 100vh;
+    overscroll-behavior-y: none;
+  }
+
+  .hero {
+    position: relative;
+    height: var(--hero-h);
+    background: var(--charcoal);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(184,150,107,0.18) 0%, transparent 70%),
+      linear-gradient(160deg, #1a1510 0%, #2A2520 50%, #1a1510 100%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.04;
+    background-image:
+      repeating-linear-gradient(45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%),
+      repeating-linear-gradient(-45deg, var(--gold) 0, var(--gold) 1px, transparent 0, transparent 50%);
+    background-size: 18px 18px;
+  }
+  .hero-content {
+    position: relative;
+    text-align: center;
+    padding: 0 1.5rem;
+    animation: fadeUp 0.9s ease both;
+  }
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 10vw, 58px);
+    font-weight: 300;
+    color: #FAF7F2;
+    line-height: 1.05;
+    margin-bottom: 10px;
+    letter-spacing: 0.02em;
+  }
+  .hero-title em { font-style: italic; color: var(--gold-light); }
+  .hero-sub {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+  .hero-rule {
+    width: 40px; height: 1px;
+    background: var(--gold);
+    margin: 16px auto;
+    opacity: 0.6;
+  }
+
+  .nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--charcoal);
+    border-bottom: 1px solid rgba(184,150,107,0.2);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+  }
+  .nav-scroll {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 1rem;
+    gap: 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+  }
+  .nav-scroll::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+  }
+  .nav-btn.active {
+    background: var(--gold);
+    color: var(--charcoal);
+    font-weight: 500;
+  }
+  .nav-btn:not(.active):hover {
+    background: rgba(184,150,107,0.12);
+    color: var(--gold-light);
+  }
+
+  .menu-body { padding: 2rem 1rem 6rem; max-width: 640px; margin: 0 auto; }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-top: 0.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .section-label {
+    font-size: 10.5px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.1;
+  }
+  .section-title em { font-style: italic; }
+  .section-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .section-ornament {
+    display: flex; align-items: center; gap: 12px;
+    margin: 14px auto 0;
+    width: fit-content;
+  }
+  .orn-line { width: 28px; height: 1px; background: var(--gold); opacity: 0.5; }
+  .orn-diamond {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: 0.7;
+  }
+
+  .dishes { display: flex; flex-direction: column; }
+
+  .dish-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px rgba(42,37,32,0.06);
+    animation: fadeUp 0.45s ease both;
+  }
+  .dish-card:active { transform: scale(0.985); }
+
+  .dish-img-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+
+  .dish-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+  }
+
+  .dish-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-chef { background: rgba(42,37,32,0.75); color: var(--gold-light); }
+  .badge-veg { background: rgba(255,255,255,0.85); color: #4a7c3a; }
+  .badge-new { background: var(--gold); color: var(--charcoal); }
+
+  .dish-info { padding: 18px 18px 20px; }
+  .dish-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .dish-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--charcoal);
+    line-height: 1.2;
+  }
+  .dish-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 300;
+    color: var(--gold);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .dish-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 7px;
+    line-height: 1.65;
+    font-weight: 300;
+  }
+  .dish-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 12px;
+  }
+  .dish-tag {
+    font-size: 10.5px;
+    color: var(--muted);
+    border: 1px solid var(--divider);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+
+  .menu-divider {
+    display: flex; align-items: center; gap: 14px;
+    margin: 1rem 0 1.5rem;
+  }
+  .menu-divider span { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); opacity: 0.7; }
+  .menu-divider::before, .menu-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--divider);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .menu-footer {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+    border-top: 1px solid var(--divider);
+    margin-top: 2rem;
+  }
+  .menu-footer p { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+
+  .fade-enter-active, .fade-leave-active { transition: opacity 0.28s ease, transform 0.28s ease; }
+  .fade-enter-from { opacity: 0; transform: translateY(12px); }
+  .fade-leave-to { opacity: 0; transform: translateY(-8px); }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-pattern"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Fine Dining Experience</p>
+      <h1 class="hero-title">Maison <em>Eclat</em></h1>
+      <div class="hero-rule"></div>
+      <p class="hero-sub">Est. 2019 &nbsp;&middot;&nbsp; Brussels</p>
+    </div>
+  </header>
+
+  <nav class="nav-wrapper">
+    <div class="nav-scroll">
+      <button
+        v-for="cat in categories"
+        :key="cat.id"
+        class="nav-btn"
+        :class="{ active: activeCategory === cat.id }"
+        @click="selectCategory(cat.id)"
+      >{{ cat.label }}</button>
+    </div>
+  </nav>
+
+  <main class="menu-body">
+    <transition name="fade" mode="out-in">
+      <div :key="activeCategory">
+        <div class="section-header">
+          <p class="section-label">{{ currentCategory.course }}</p>
+          <h2 class="section-title" v-html="currentCategory.title"></h2>
+          <p class="section-desc">{{ currentCategory.desc }}</p>
+          <div class="section-ornament">
+            <span class="orn-line"></span>
+            <span class="orn-diamond"></span>
+            <span class="orn-line"></span>
+          </div>
+        </div>
+
+        <div class="dishes">
+          <template v-for="(dish, i) in currentDishes" :key="dish.id">
+            <div class="dish-card" :style="{ animationDelay: (i * 0.07) + 's' }">
+              <div class="dish-img-wrap">
+                <div class="dish-placeholder" :style="{ background: dish.gradient }">
+                  <span>{{ dish.emoji }}</span>
+                </div>
+                <span v-if="dish.badge" class="dish-badge" :class="'badge-' + dish.badgeType">{{ dish.badge }}</span>
+              </div>
+              <div class="dish-info">
+                <div class="dish-top">
+                  <h3 class="dish-name">{{ dish.name }}</h3>
+                  <span class="dish-price">{{ dish.price }}</span>
+                </div>
+                <p class="dish-desc">{{ dish.desc }}</p>
+                <div class="dish-tags" v-if="dish.tags && dish.tags.length">
+                  <span class="dish-tag" v-for="t in dish.tags" :key="t">{{ t }}</span>
+                </div>
+              </div>
+            </div>
+            <div v-if="(i + 1) % 3 === 0 && i < currentDishes.length - 1" class="menu-divider">
+              <span>&middot;</span>
+            </div>
+          </template>
+        </div>
+
+        <footer class="menu-footer">
+          <p>Please inform us of any allergies or dietary requirements</p>
+          <p style="margin-top:6px; opacity:0.6">All dishes are prepared fresh to order</p>
+        </footer>
+      </div>
+    </transition>
+  </main>
+</div>
+
+<script>
+const { createApp } = Vue;
+createApp({
+  data() {
+    return {
+      activeCategory: 'starters',
+      categories: [
+        { id: 'starters', label: 'Starters',  course: 'To Begin',        title: '<em>Les</em> Entrees',   desc: 'Delicate openings crafted to awaken the senses and set the tone for your evening.' },
+        { id: 'mains',    label: 'Mains',     course: 'Main Course',     title: '<em>Les</em> Plats',     desc: 'Signature dishes where classical technique meets seasonal ingredients at their peak.' },
+        { id: 'pasta',    label: 'Pasta',     course: 'Handmade Daily',  title: '<em>Pates</em> Fraiches',desc: 'All pasta made in-house each morning with stone-milled flour from our partner mill.' },
+        { id: 'desserts', label: 'Desserts',  course: 'Sweet Finale',    title: '<em>Les</em> Douceurs', desc: 'A sweet conclusion to your journey — each dessert a small work of art.' },
+        { id: 'drinks',   label: 'Drinks',    course: 'Libations',       title: '<em>Les</em> Boissons', desc: 'Curated wines, artisan cocktails and non-alcoholic pairings for every course.' },
+      ],
+      menu: {
+        starters: [
+          { id:'s1', name:'Burrata & Heritage Tomatoes', price:'€16', desc:'Creamy burrata from Puglia, heirloom tomatoes, aged balsamic reduction, fresh basil oil and fleur de sel.', emoji:'🍅', gradient:'linear-gradient(135deg,#f8e8d4,#f5c4a0)', badge:"Chef's Pick", badgeType:'chef', tags:['Vegetarian','Gluten-free'] },
+          { id:'s2', name:'Smoked Salmon Millefeuille',  price:'€22', desc:'Scottish cold-smoked salmon, creme fraiche mousse, cucumber jelly, dill and golden caviar.', emoji:'🐟', gradient:'linear-gradient(135deg,#e8f4f0,#b8ddd4)', badge:'New', badgeType:'new', tags:['Pescatarian','Gluten-free'] },
+          { id:'s3', name:'Foie Gras Terrine',           price:'€28', desc:'Silky duck foie gras, Sauternes jelly, toasted brioche, Granny Smith apple and crushed hazelnuts.', emoji:'🥐', gradient:'linear-gradient(135deg,#fdf0d5,#f5d89a)', tags:['Seasonal'] },
+          { id:'s4', name:'Garden Pea Veloute',          price:'€13', desc:'Chilled green pea cream, whipped goat cheese, preserved lemon, crispy shallots and micro herbs.', emoji:'🌿', gradient:'linear-gradient(135deg,#e8f5e1,#b5dfa5)', badge:'Vegan', badgeType:'veg', tags:['Vegan','Gluten-free'] },
+          { id:'s5', name:'Wagyu Beef Tartare',          price:'€26', desc:'Hand-cut A4 Wagyu, aged Dijon, cornichon, shallots, Tabasco, quail egg and toasted sourdough.', emoji:'🥩', gradient:'linear-gradient(135deg,#f5e4e4,#e8b4b4)', badge:"Chef's Pick", badgeType:'chef', tags:['Premium'] },
+        ],
+        mains: [
+          { id:'m1', name:'Roasted Turbot',       price:'€44', desc:'Line-caught turbot fillet, Jerusalem artichoke puree, coastal herbs beurre blanc, sea vegetable salad.', emoji:'🐡', gradient:'linear-gradient(135deg,#e4eff8,#a8ccec)', badge:"Chef's Pick", badgeType:'chef', tags:['Gluten-free','Sustainable'] },
+          { id:'m2', name:'Dry-Aged Duck Breast', price:'€38', desc:'21-day dry-aged Challans duck, cherry gastrique, celeriac gratin, wilted greens and verjuice jus.', emoji:'🦆', gradient:'linear-gradient(135deg,#f4e8d4,#d4a87a)', tags:['Gluten-free'] },
+          { id:'m3', name:'Truffle Risotto',      price:'€34', desc:'Carnaroli risotto stirred with aged Parmigiano, black truffle shavings and Barolo wine reduction.', emoji:'🍄', gradient:'linear-gradient(135deg,#ede8e0,#c4b89a)', badge:'Vegetarian', badgeType:'veg', tags:['Vegetarian','Seasonal'] },
+          { id:'m4', name:'Rack of Lamb',         price:'€46', desc:'French-trimmed Pyrenean lamb, herb crust, Provencal ratatouille, lamb jus and garlic confit.', emoji:'🫒', gradient:'linear-gradient(135deg,#eae4f2,#c4b0e0)', tags:['Gluten-free','Premium'] },
+          { id:'m5', name:'Charred Cauliflower',  price:'€28', desc:'Whole roasted cauli, whipped tahini, pomegranate molasses, toasted pine nuts and zaatar.', emoji:'🥦', gradient:'linear-gradient(135deg,#f5f0e4,#e8d89a)', badge:'Vegan', badgeType:'veg', tags:['Vegan','Gluten-free'] },
+        ],
+        pasta: [
+          { id:'p1', name:'Tagliolini al Nero',       price:'€26', desc:'Squid ink tagliolini, Carabinero prawn, nduja, cherry tomatoes, bottarga and basil oil.', emoji:'🦐', gradient:'linear-gradient(135deg,#2a2040,#3d2d60)', badge:'New', badgeType:'new', tags:['Pescatarian','Handmade'] },
+          { id:'p2', name:'Pappardelle al Cinghiale', price:'€29', desc:'Egg pappardelle, slow-braised wild boar ragu, juniper, thyme and aged pecorino.', emoji:'🍝', gradient:'linear-gradient(135deg,#f5e4d0,#d4946a)', badge:"Chef's Pick", badgeType:'chef', tags:['Handmade','Slow-cooked'] },
+          { id:'p3', name:'Ricotta Gnudi',            price:'€22', desc:'Silky ricotta dumplings, sage beurre noisette, crispy guanciale and Parmigiano snow.', emoji:'🧀', gradient:'linear-gradient(135deg,#f8f4ec,#e8d8b8)', tags:['Vegetarian','Handmade'] },
+          { id:'p4', name:'Cacio e Pepe Tonnarelli',  price:'€20', desc:'Roman classic: tonnarelli pasta, Pecorino Romano DOP, Parmigiano, tellicherry pepper.', emoji:'🫙', gradient:'linear-gradient(135deg,#ece8e0,#c8bca8)', tags:['Vegetarian','Classic'] },
+        ],
+        desserts: [
+          { id:'d1', name:'Valrhona Chocolate Sphere', price:'€16', desc:'Dark chocolate shell, salted caramel mousse, praline feuilletine, warm ganache poured tableside.', emoji:'🍫', gradient:'linear-gradient(135deg,#2d1a0e,#5c3415)', badge:'Signature', badgeType:'chef', tags:['Gluten-free','Signature'] },
+          { id:'d2', name:'Tarte Tatin Millefeuille',  price:'€14', desc:'Caramelised apple tarte Tatin, vanilla bean mille-feuille pastry, Calvados creme anglaise.', emoji:'🍎', gradient:'linear-gradient(135deg,#f8ead0,#e8b87a)', tags:['Seasonal','Classic'] },
+          { id:'d3', name:'Yuzu Souffle',              price:'€15', desc:'Light-as-air yuzu souffle, Japanese matcha ice cream and crystallised ginger — ordered ahead.', emoji:'🍋', gradient:'linear-gradient(135deg,#f8f4c8,#e0d47a)', badge:'Pre-order', badgeType:'new', tags:['Gluten-free'] },
+          { id:'d4', name:'Cheese Trolley Selection',  price:'€19', desc:'Seasonal curated French and Belgian artisan cheeses, honeycomb, walnut bread and fruit paste.', emoji:'🧀', gradient:'linear-gradient(135deg,#f4f0e4,#d4c89a)', tags:['Vegetarian'] },
+        ],
+        drinks: [
+          { id:'dr1', name:'Vintage Champagne',    price:'€24', desc:'By the glass: Bollinger La Grande Annee 2015. Notes of brioche, stone fruit and toasted almond.', emoji:'🥂', gradient:'linear-gradient(135deg,#f8f4d4,#e8d87a)', badge:'Premium', badgeType:'chef', tags:['Sparkling','France'] },
+          { id:'dr2', name:'Elderflower Spritz',   price:'€9',  desc:'House elderflower cordial, Fever-Tree soda, cucumber, fresh mint and dehydrated lemon wheel.', emoji:'🌸', gradient:'linear-gradient(135deg,#eef8f0,#b0e0c0)', badge:'Non-Alc', badgeType:'veg', tags:['Non-alcoholic'] },
+          { id:'dr3', name:'Negroni Rosso',        price:'€13', desc:'Gin Mare, Campari, Mancino Rosso Vermouth, orange bitters and house-carved ice sphere.', emoji:'🍊', gradient:'linear-gradient(135deg,#f8e4d4,#e89a6a)', tags:['Cocktail','Classic'] },
+          { id:'dr4', name:'Natural Wine Pairing', price:'€55', desc:'Sommelier-selected flight of 4 natural and biodynamic wines paired to your menu across 3 or 4 courses.', emoji:'🍷', gradient:'linear-gradient(135deg,#f0e4f4,#c49ad4)', badge:'Sommelier', badgeType:'chef', tags:['Wine pairing','Natural'] },
+          { id:'dr5', name:'Espresso Martini',     price:'€14', desc:'Ketel One vodka, Kahlua, double espresso, vanilla and a dusting of Madagascan cocoa.', emoji:'☕', gradient:'linear-gradient(135deg,#1a0e0a,#3d1e12)', tags:['Cocktail','After dinner'] },
+        ],
+      }
+    };
+  },
+  computed: {
+    currentCategory() { return this.categories.find(c => c.id === this.activeCategory); },
+    currentDishes()    { return this.menu[this.activeCategory] || []; }
+  },
+  methods: {
+    selectCategory(id) {
+      this.activeCategory = id;
+      const nav = document.querySelector('.nav-wrapper');
+      if (nav) window.scrollTo({ top: nav.offsetTop, behavior: 'smooth' });
+    }
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
