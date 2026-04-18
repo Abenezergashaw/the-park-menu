@@ -381,7 +381,7 @@ watch(isMenuOpen, (val) => {
       </div>
 
       <!-- Content -->
-      <div class="px-6 pb-20 -mt-12 relative">
+      <div class="px-6 pb-20 mt-6 relative">
         <!-- Name with gradient -->
         <h1 class="text-5xl font-black leading-none mb-4 bg-gradient-to-r from-white via-white to-[#DB7C2E] bg-clip-text text-transparent">
           {{ selectedDish.name }}
