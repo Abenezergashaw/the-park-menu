@@ -14,6 +14,16 @@ const categories = ref([]);
 const activeCategory = ref("");
 const isMenuOpen = ref(false);
 const isLoading = ref(true);
+const selectedDish = ref(null);
+
+const openDish = (dish) => {
+  selectedDish.value = dish;
+  document.body.style.overflow = "hidden";
+};
+const closeDish = () => {
+  selectedDish.value = null;
+  document.body.style.overflow = "auto";
+};
 
 /**
  * Fetch Data from Supabase
@@ -22,7 +32,7 @@ const fetchData = async () => {
   isLoading.value = true;
   try {
     const [catRes, dishRes] = await Promise.all([
-      supabase.from("categories").select("*").order("id"),
+      supabase.from("categories").select("*").order("display_order"),
       supabase.from("dishes").select("*").eq("is_available", true),
     ]);
 
@@ -277,7 +287,8 @@ watch(isMenuOpen, (val) => {
         <div
           v-for="d in currentDishes"
           :key="d.id"
-          class="group bg-[#2A2A2A] rounded-[2.5rem] overflow-hidden border border-white/5 flex flex-col hover:border-[#DB7C2E]/30 transition-all duration-500 shadow-2xl"
+          @click="openDish(d)"
+          class="group bg-[#2A2A2A] rounded-[2.5rem] overflow-hidden border border-white/5 flex flex-col hover:border-[#DB7C2E]/30 transition-all duration-500 shadow-2xl cursor-pointer active:scale-[0.98]"
         >
           <div class="relative h-72 overflow-hidden">
             <img
@@ -346,6 +357,55 @@ watch(isMenuOpen, (val) => {
       </button>
     </div>
   </div>
+
+  <!-- DISH DETAIL OVERLAY -->
+  <Transition name="dish-detail">
+    <div v-if="selectedDish" class="fixed inset-0 z-50 bg-[#121212] overflow-y-auto overflow-x-hidden w-screen">
+
+      <!-- Hero Image -->
+      <div class="relative h-[50vh] w-full overflow-hidden">
+        <img :src="selectedDish.image_url" class="absolute inset-0 w-full h-full object-cover object-center" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/40 to-transparent"></div>
+
+        <!-- Back Button -->
+        <button
+          @click="closeDish"
+          class="absolute top-6 left-6 flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 px-4 py-2.5 rounded-2xl active:scale-95 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span class="text-xs font-black uppercase tracking-widest text-white">Back</span>
+        </button>
+
+      </div>
+
+      <!-- Content -->
+      <div class="px-6 pb-20 -mt-12 relative">
+        <!-- Name with gradient -->
+        <h1 class="text-5xl font-black leading-none mb-4 bg-gradient-to-r from-white via-white to-[#DB7C2E] bg-clip-text text-transparent">
+          {{ selectedDish.name }}
+        </h1>
+
+        <div class="flex items-center gap-3 mb-8">
+          <div class="h-px flex-1 bg-gradient-to-r from-[#DB7C2E]/60 to-transparent"></div>
+          <span class="text-[10px] uppercase tracking-[0.3em] text-[#DB7C2E] font-black">The Park Signature</span>
+        </div>
+
+        <div class="bg-white/5 border border-white/5 rounded-3xl p-6 space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-white/40 text-xs uppercase tracking-widest">Price</span>
+            <span class="text-[#DB7C2E] font-black text-xl">{{ selectedDish.price }} <span class="text-sm text-white/40">ETB</span></span>
+          </div>
+          <div class="h-px bg-white/5"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-white/40 text-xs uppercase tracking-widest">Category</span>
+            <span class="text-white font-bold text-sm">{{ categories.find(c => c.id === selectedDish.category_id)?.label || '—' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Transition>
 
   <footer
     class="static bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-xl border-t border-white/5 px-4 py-4"
@@ -435,6 +495,17 @@ watch(isMenuOpen, (val) => {
 .slide-fade-enter-from aside,
 .slide-fade-leave-to aside {
   transform: translateX(100%);
+}
+
+/* Dish Detail Transitions */
+.dish-detail-enter-active,
+.dish-detail-leave-active {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dish-detail-enter-from,
+.dish-detail-leave-to {
+  opacity: 0;
+  transform: translateY(40px);
 }
 
 /* Grid List Transitions */
