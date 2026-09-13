@@ -1,12 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from "vue";
-import { createClient } from "@supabase/supabase-js";
-
-// Initialize Supabase
-const supabase = createClient(
-  "https://gruipgmcxdqkzdxhdfgd.supabase.co",
-  "sb_publishable_dVjAQ8UTVDB7mUel7Xlorg_GdTiBybG",
-);
+import { supabase } from "../lib/supabase";
 
 // State Management
 const allDishes = ref([]);

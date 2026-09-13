@@ -1,15 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 const router = useRouter();
 const SESSION_DURATION = 6 * 60 * 60 * 1000; // 6 hours in ms
-
-const supabase = createClient(
-  "https://gruipgmcxdqkzdxhdfgd.supabase.co",
-  "sb_publishable_dVjAQ8UTVDB7mUel7Xlorg_GdTiBybG",
-);
 
 const dishes = ref([]);
 const categories = ref([]);
